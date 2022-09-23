@@ -11,7 +11,6 @@
 |**posted_by**|VARCHAR(255)|NOT NULL|Auteur du post de l'oeuvre|
 |**updated_by**|VARCHAR(255)|NULL|Auteur du post de l'oeuvre|
 |**slug**|VARCHAR(255)|NOT NULL|Slug pour l'URL|
-|**images**|??|NULL|A voir si on stock l'image en DB + comment faire si plusieurs images|
 |**created_at**|TIMESTAMP|NOT NULL, CURRENT TIMESTAMP|Date d'ajout|
 |**updated_at**|TIMESTAMP|NULL|Date de modification|
 |**category_id**|ID|Foreign key, NOT NULL|ID de la categorie|
@@ -25,7 +24,6 @@
 |**name**|VARCHAR(255)|NOT NULL|Nom de la catégorie|
 |**description**|TEXT|NOT NULL|Description de la catégorie|
 |**slug**|VARCHAR(255)|NOT NULL|Slug pour l'URL|
-|**images**|??|NULL|A voir si on stock l'image en DB + comment faire si plusieurs images|
 |||||
 
 ## Utilisateur (user)
@@ -42,11 +40,11 @@ ________
 ## MOCODO
 
 ```
-CATEGORY: id_category, name, description, images?
+CATEGORY: id_category, name, description
 ARTWORK_CATEGORY, 11 ARTWORK, 0N CATEGORY: id_artwork, id_category
 
 :
-ARTWORK: id_artwork, name, description, author, created_in, slug, images?, posted_by, updated_by, created_at, updated_at
+ARTWORK: id_artwork, name, description, author, created_in, slug, posted_by, updated_by, created_at, updated_at
 
 USER: id_user, email, password, roles
 USER_ARTWORK, 0N USER, 01 ARTWORK: id_user, id_artwork
