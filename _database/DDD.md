@@ -5,11 +5,9 @@
 |-|-|-|-|
 |**id**|INT|Primary Key, NOT NULL, UNSIGNED, AI|ID de l'oeuvre|
 |**name**|VARCHAR(255)|NOT NULL|Nom de l'oeuvre|
-|**description**|TEXT|NOT NULL|Description de l'oeuvre|
-|**author**|VARCHAR(255)|NOT NULL|Auteur de l'oeuvre|
+|**description**|TEXT|NULL|Description de l'oeuvre|
+|**author**|VARCHAR(255)|NULL|Auteur de l'oeuvre|
 |**created_in**|VARCHAR(255)|NOT NULL|Date de création de l'oeuvre|
-|**posted_by**|VARCHAR(255)|NOT NULL|Auteur du post de l'oeuvre|
-|**updated_by**|VARCHAR(255)|NULL|Auteur du post de l'oeuvre|
 |**slug**|VARCHAR(255)|NOT NULL|Slug pour l'URL|
 |**created_at**|TIMESTAMP|NOT NULL, CURRENT TIMESTAMP|Date d'ajout|
 |**updated_at**|TIMESTAMP|NULL|Date de modification|
@@ -22,7 +20,7 @@
 |-|-|-|-|
 |**id**|INT|Primary Key, NOT NULL, UNSIGNED, AI|ID de la catégorie|
 |**name**|VARCHAR(255)|NOT NULL|Nom de la catégorie|
-|**description**|TEXT|NOT NULL|Description de la catégorie|
+|**description**|TEXT|NULL|Description de la catégorie|
 |**slug**|VARCHAR(255)|NOT NULL|Slug pour l'URL|
 |||||
 
