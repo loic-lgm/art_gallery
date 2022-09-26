@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Artwork;
 use App\Form\ArtworkType;
 use App\Repository\ArtworkRepository;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,6 +34,10 @@ class ArtworkController extends AbstractController
         $artwork = new Artwork();
         $form = $this->createForm(ArtworkType::class, $artwork);
         $form->handleRequest($request);
+        $artworkName = $form->get("name")->getData();
+        $artwork->setSlug(str_replace(' ', '-', $artworkName));
+        $artwork->setCreatedAt(new \DateTimeImmutable());
+        $artwork->setUser($this->getUser());
 
         if ($form->isSubmitted() && $form->isValid()) {
             $artworkRepository->add($artwork, true);
@@ -65,6 +70,7 @@ class ArtworkController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $artwork->setUpdatedAt(new \Datetime());
             $artworkRepository->add($artwork, true);
 
             return $this->redirectToRoute('app_admin_artwork_index', [], Response::HTTP_SEE_OTHER);
@@ -77,7 +83,7 @@ class ArtworkController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="app_admin_artwork_delete", methods={"POST"})
+     * @Route("/{id}/delete", name="app_admin_artwork_delete", methods={"POST"})
      */
     public function delete(Request $request, Artwork $artwork, ArtworkRepository $artworkRepository): Response
     {
