@@ -22,3 +22,8 @@ TODO
 4. lancer le server 
     - BACK : `php -S localhost:8000 -t public` || `symfony server:serve`
     - FRONT : `yarn watch`
+    
+### CREDENTIALS 
+
+login : `admin@test.com` ||
+password : `adminadmin`
