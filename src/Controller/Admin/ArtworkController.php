@@ -34,8 +34,11 @@ class ArtworkController extends AbstractController
         $artwork = new Artwork();
         $form = $this->createForm(ArtworkType::class, $artwork);
         $form->handleRequest($request);
-        $artworkName = $form->get("name")->getData();
-        $artwork->setSlug(str_replace(' ', '-', $artworkName));
+
+        $artworkName = trim($form->get("name")->getData());
+        $artworkNameLower = strtolower($artworkName);
+        $artwork->setSlug(str_replace(' ', '-', $artworkNameLower));
+
         $artwork->setCreatedAt(new \DateTimeImmutable());
         $artwork->setUser($this->getUser());
 
@@ -68,6 +71,10 @@ class ArtworkController extends AbstractController
     {
         $form = $this->createForm(ArtworkType::class, $artwork);
         $form->handleRequest($request);
+
+        $artworkName = trim($form->get("name")->getData());
+        $artworkNameLower = strtolower($artworkName);
+        $artwork->setSlug(str_replace(' ', '-', $artworkNameLower));
 
         if ($form->isSubmitted() && $form->isValid()) {
             $artwork->setUpdatedAt(new \Datetime());
