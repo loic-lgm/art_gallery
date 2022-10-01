@@ -3,10 +3,12 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Artwork;
+use App\Entity\Image;
 use App\Form\ArtworkType;
 use App\Repository\ArtworkRepository;
-
+use App\Repository\ImageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -37,12 +39,31 @@ class ArtworkController extends AbstractController
 
         $artworkName = trim($form->get("name")->getData());
         $artworkNameLower = strtolower($artworkName);
-        $artwork->setSlug(str_replace(' ', '-', $artworkNameLower));
+        $artWorkWithoutSpace = (str_replace(' ', '-', $artworkNameLower));
+        // $artWorkWithoutAccents = \Transliterator::create('NFD; [:Nonspacing Mark:] Remove; NFC')
+        // ->transliterate($artWorkWithoutSpace);
+        // dd(\Transliterator::create('NFD; [:Nonspacing Mark:] Remove; NFC')->transliterate($artWorkWithoutSpace));
+        $artwork->setSlug($artWorkWithoutSpace);
 
         $artwork->setCreatedAt(new \DateTimeImmutable());
         $artwork->setUser($this->getUser());
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $images = $form->get('images')->getData();
+
+            foreach($images as $image) {
+                $fichier = md5(uniqid()) . '.' . $image->guessExtension();
+
+                $image->move(
+                    $this->getParameter('images_directory'),
+                    $fichier
+                );
+
+                $img = new Image();
+                $img->setName($fichier);
+                $artwork->addImage($img);
+            }
+
             $artworkRepository->add($artwork, true);
 
             return $this->redirectToRoute('app_admin_artwork_index', [], Response::HTTP_SEE_OTHER);
@@ -77,6 +98,21 @@ class ArtworkController extends AbstractController
         $artwork->setSlug(str_replace(' ', '-', $artworkNameLower));
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $images = $form->get('images')->getData();
+
+            foreach($images as $image) {
+                $fichier = md5(uniqid()) . '.' . $image->guessExtension();
+
+                $image->move(
+                    $this->getParameter('images_directory'),
+                    $fichier
+                );
+
+                $img = new Image();
+                $img->setName($fichier);
+                $artwork->addImage($img);
+            }
+
             $artwork->setUpdatedAt(new \Datetime());
             $artworkRepository->add($artwork, true);
 
@@ -99,5 +135,19 @@ class ArtworkController extends AbstractController
         }
 
         return $this->redirectToRoute('app_admin_artwork_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * @Route("/delete/image/{id}", name="app_admin_artwork_delete_image", methods={"POST"})
+     */
+    public function deleteImage(Request $request, Image $image, ImageRepository $imageRepository): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$image->getId(), $request->request->get('_token'))) {
+            unlink($this->getParameter('images_directory') . '/' . $image->getName());
+            $imageRepository->remove($image, true);
+        }
+
+        // return $this->redirectToRoute('app_admin_artwork_index', [], Response::HTTP_SEE_OTHER);
+        return new JsonResponse(['succes' => 1]);
     }
 }

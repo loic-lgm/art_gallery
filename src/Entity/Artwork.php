@@ -67,7 +67,7 @@ class Artwork
     private $category;
 
     /**
-     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="artwork", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="artwork", orphanRemoval=true, cascade={"persist"})
      */
     private $images;
 
