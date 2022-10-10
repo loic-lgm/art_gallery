@@ -140,14 +140,14 @@ class ArtworkController extends AbstractController
     /**
      * @Route("/delete/image/{id}", name="app_admin_artwork_delete_image", methods={"POST"})
      */
-    public function deleteImage(Request $request, Image $image, ImageRepository $imageRepository): Response
+    public function deleteImage(Request $request, Image $image, ArtworkRepository $artworkRepository, ImageRepository $imageRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$image->getId(), $request->request->get('_token'))) {
+
+        if ($this->isCsrfTokenValid('delete'.$image->getId(), $request->request->get('_tokenImage'))) {
             unlink($this->getParameter('images_directory') . '/' . $image->getName());
             $imageRepository->remove($image, true);
         }
-
-        // return $this->redirectToRoute('app_admin_artwork_index', [], Response::HTTP_SEE_OTHER);
-        return new JsonResponse(['succes' => 1]);
+        
+        return $this->redirectToRoute('app_admin_artwork_index', [], Response::HTTP_SEE_OTHER);
     }
 }
