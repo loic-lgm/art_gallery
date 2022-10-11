@@ -88,9 +88,12 @@ class ArtworkController extends AbstractController
     /**
      * @Route("/{id}/edit", name="app_admin_artwork_edit", methods={"GET", "POST"})
      */
-    public function edit(Request $request, Artwork $artwork, ArtworkRepository $artworkRepository): Response
+    public function edit(Request $request, Artwork $artwork, ArtworkRepository $artworkRepository, ImageRepository $imageRepository): Response
     {
-        $form = $this->createForm(ArtworkType::class, $artwork);
+        // $getAllImagesByArtwork = $imageRepository->findByArtwork($artwork->getId());
+        $getAllImagesByArtwork = $imageRepository->findByArtworkId($artwork);
+        dump($getAllImagesByArtwork);
+        $form = $this->createForm(ArtworkType::class, $artwork, ['images' => $getAllImagesByArtwork]);
         $form->handleRequest($request);
 
         $artworkName = trim($form->get("name")->getData());
@@ -113,6 +116,21 @@ class ArtworkController extends AbstractController
                 $artwork->addImage($img);
             }
 
+            // find the image who will be used as main image
+            $mainImage = $imageRepository->find($form->get("mainImage")->getData());
+
+            // get the previous main image
+            $oldMainImage = $imageRepository->findOneBy(['isMain' => true]);
+
+            // if $mainImage is different to $oldMainImage
+            if ($form->get('mainImage')->getData() !== $oldMainImage) {
+                // set isMain to false
+                $oldMainImage->setIsMain(false);
+
+                // set isMain to true
+                $mainImage->setIsMain(true);
+            }
+            
             $artwork->setUpdatedAt(new \Datetime());
             $artworkRepository->add($artwork, true);
 
@@ -147,7 +165,7 @@ class ArtworkController extends AbstractController
             unlink($this->getParameter('images_directory') . '/' . $image->getName());
             $imageRepository->remove($image, true);
         }
-        
+
         return $this->redirectToRoute('app_admin_artwork_index', [], Response::HTTP_SEE_OTHER);
     }
 }

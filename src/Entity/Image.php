@@ -28,6 +28,11 @@ class Image
      */
     private $artwork;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isMain;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -53,6 +58,18 @@ class Image
     public function setArtwork(?Artwork $artwork): self
     {
         $this->artwork = $artwork;
+
+        return $this;
+    }
+
+    public function getIsMain(): ?bool
+    {
+        return $this->isMain;
+    }
+
+    public function setIsMain(?bool $isMain): self
+    {
+        $this->isMain = $isMain;
 
         return $this;
     }

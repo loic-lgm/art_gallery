@@ -39,20 +39,19 @@ class ImageRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Image[] Returns an array of Image objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('i')
-//            ->andWhere('i.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('i.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+   /**
+    * @return Image[] Returns an array of Image objects
+    */
+   public function findByArtworkId($artworkId): array
+   {
+       return $this->createQueryBuilder('i')
+           ->andWhere('i.artwork = :artwork_id')
+           ->setParameter('artwork_id', $artworkId)
+           ->orderBy('i.isMain', 'DESC')
+           ->getQuery()
+           ->getResult()
+       ;
+   }
 
 //    public function findOneBySomeField($value): ?Image
 //    {
