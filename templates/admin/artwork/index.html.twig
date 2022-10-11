@@ -30,7 +30,11 @@
                 <td>
                     <a href="{{ path('app_admin_artwork_show', {'id': artwork.id}) }}">show</a>
                     <a href="{{ path('app_admin_artwork_edit', {'id': artwork.id}) }}">edit</a>
-                    <a href="{{ path('app_admin_artwork_delete', {'id': artwork.id}) }}">delete</a>
+                    <form method="post" action="{{ path('app_admin_artwork_delete', {'id': artwork.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ artwork.id) }}">
+                        <button class="btn">Delete</button>
+                    </form>
+
                 </td>
             </tr>
         {% else %}
