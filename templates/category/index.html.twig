@@ -6,4 +6,10 @@
 
     <h1>CATEGORIES</h1>
 
+    {% for category in categories %}
+        <div class="category-container">
+            <a href="{{ path('app_category_show', {'id': category.id}) }}">{{category.name}}</a>
+        </div>
+    {% endfor %}
+
 {% endblock %}
