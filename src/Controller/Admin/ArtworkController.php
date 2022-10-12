@@ -90,9 +90,8 @@ class ArtworkController extends AbstractController
      */
     public function edit(Request $request, Artwork $artwork, ArtworkRepository $artworkRepository, ImageRepository $imageRepository): Response
     {
-        // $getAllImagesByArtwork = $imageRepository->findByArtwork($artwork->getId());
         $getAllImagesByArtwork = $imageRepository->findByArtworkId($artwork);
-        dump($getAllImagesByArtwork);
+
         $form = $this->createForm(ArtworkType::class, $artwork, ['images' => $getAllImagesByArtwork]);
         $form->handleRequest($request);
 
@@ -124,9 +123,12 @@ class ArtworkController extends AbstractController
 
             // if $mainImage is different to $oldMainImage
             if ($form->get('mainImage')->getData() !== $oldMainImage) {
-                // set isMain to false
-                $oldMainImage->setIsMain(false);
 
+                if ($oldMainImage) {
+                    // set isMain to false
+                    $oldMainImage->setIsMain(false);
+                }
+                    
                 // set isMain to true
                 $mainImage->setIsMain(true);
             }
